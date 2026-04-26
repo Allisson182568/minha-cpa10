@@ -1,211 +1,233 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CPA-10 PRO - Allisson</title>
-<script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-body { background:#020617; color:#f8fafc; font-family: sans-serif; }
-.glass { background: rgba(15,23,42,.8); backdrop-filter: blur(10px); }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPA-10 Pro - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #f1f5f9; }
+        .view { display: none; transition: all 0.3s ease; }
+        .active { display: block; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .btn-opt { transition: transform 0.1s; }
+        .btn-opt:active { transform: scale(0.98); }
+    </style>
 </head>
+<body class="p-4 flex flex-col min-h-screen">
 
-<body class="p-4 space-y-4">
+    <div class="max-w-md mx-auto w-full space-y-4 flex-grow">
+        
+        <header class="flex justify-between items-center p-2">
+            <h1 class="text-xl font-800 tracking-tighter text-blue-400">CPA10<span class="text-white">PRO</span></h1>
+            <div id="top-score" class="text-xs font-bold bg-blue-900/50 px-3 py-1 rounded-full border border-blue-500/30">SCORE: 0%</div>
+        </header>
 
-<div class="max-w-md mx-auto space-y-4">
+        <div id="dash" class="view active space-y-4">
+            <div class="glass p-6 rounded-2xl text-center">
+                <div class="text-5xl mb-2">📊</div>
+                <h2 class="text-gray-400 text-sm font-semibold uppercase tracking-widest">Seu Desempenho</h2>
+                <div id="dash-pct" class="text-6xl font-extrabold my-2 text-white">0%</div>
+                <p id="dash-total" class="text-blue-400 font-medium">0 questões respondidas</p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass p-4 rounded-xl">
+                    <p class="text-xs text-gray-400">Acertos</p>
+                    <p id="dash-hits" class="text-2xl font-bold text-green-400">0</p>
+                </div>
+                <div class="glass p-4 rounded-xl">
+                    <p class="text-xs text-gray-400">Erros</p>
+                    <p id="dash-miss" class="text-2xl font-bold text-red-400">0</p>
+                </div>
+            </div>
 
-<!-- HEADER -->
-<div class="glass p-6 rounded-2xl text-center">
-<h1 class="text-xs text-blue-400 font-bold">CPA-10 PRO</h1>
-<div id="countdown" class="text-2xl font-black">--</div>
-<button onclick="installApp()" class="mt-2 text-xs bg-green-600 px-3 py-1 rounded">Instalar App</button>
-</div>
+            <button onclick="resetStats()" class="w-full text-xs text-gray-500 hover:text-red-400 transition">Resetar Estatísticas</button>
+        </div>
 
-<!-- QUIZ -->
-<div class="glass p-6 rounded-2xl">
-<div class="flex justify-between text-xs mb-2">
-<span id="cat"></span>
-<span id="timer">20s</span>
-</div>
+        <div id="prova" class="view space-y-6">
+            <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-yellow-500 uppercase tracking-widest">Simulado Real</span>
+                <span id="timer" class="text-sm font-mono bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded">15s</span>
+            </div>
+            
+            <div class="glass p-6 rounded-2xl">
+                <p id="q" class="text-lg font-semibold leading-tight">Carregando...</p>
+            </div>
 
-<div id="q" class="font-bold mb-4"></div>
-<div id="opts" class="space-y-2"></div>
+            <div id="opts" class="space-y-3">
+                </div>
+        </div>
 
-<div id="exp" class="hidden mt-4 text-xs"></div>
+        <div id="audio" class="view space-y-6 text-center">
+            <div class="glass p-8 rounded-3xl">
+                <div class="relative inline-block">
+                    <div id="audio-wave" class="hidden absolute -inset-4 bg-blue-500/20 rounded-full animate-ping"></div>
+                    <button onclick="toggleAudioMode()" id="btn-audio" class="relative bg-blue-600 hover:bg-blue-500 w-24 h-24 rounded-full text-3xl shadow-lg shadow-blue-500/40 transition-all">
+                        ▶️
+                    </button>
+                </div>
+                <h3 class="mt-6 font-bold text-xl">Modo Direção</h3>
+                <p class="text-gray-400 text-sm mt-2">O app lerá dicas essenciais para você decorar enquanto dirige.</p>
+            </div>
 
-<button id="next" onclick="nextQ()" class="hidden mt-4 w-full bg-white text-black py-2 rounded">Próximo</button>
-</div>
+            <div class="glass p-4 rounded-2xl flex justify-around">
+                <a href="https://open.spotify.com/show/3XnLshvIovNRE9fT6BqFvV" target="_blank" class="text-xs font-bold text-green-400">SPOTIFY 🎧</a>
+                <a href="https://www.youtube.com/@EdgarAbreu" target="_blank" class="text-xs font-bold text-red-400">YOUTUBE 📺</a>
+            </div>
+        </div>
 
-<!-- DASHBOARD -->
-<div class="glass p-6 rounded-2xl">
-<h2 class="text-xs mb-2">Desempenho</h2>
-<canvas id="chart"></canvas>
-</div>
+    </div>
 
-<!-- AUDIO -->
-<div class="glass p-4 rounded-2xl">
-<button onclick="speak()" class="w-full bg-blue-600 py-2 rounded">🔊 Ouvir pergunta</button>
-</div>
-
-<!-- LINKS -->
-<div class="glass p-4 rounded-2xl space-y-2 text-xs">
-<a href="https://open.spotify.com/show/472aXpXf8O09zU89G1r4O6" target="_blank">🎧 Podcast CPA-10</a><br>
-<a href="https://www.youtube.com/playlist?list=PL_mN57A1BfGv-v8vAAmY-OsqP-I61XjX1" target="_blank">📺 Curso completo</a>
-</div>
-
-</div>
+    <nav class="max-w-md mx-auto w-full glass mt-4 p-2 rounded-2xl flex justify-around shadow-2xl">
+        <button onclick="showView('dash')" class="p-3 grayscale hover:grayscale-0 transition">📊</button>
+        <button onclick="showView('prova')" class="p-3 grayscale hover:grayscale-0 transition">🧪</button>
+        <button onclick="showView('audio')" class="p-3 grayscale hover:grayscale-0 transition">🎧</button>
+    </nav>
 
 <script>
-// ====== CONFIG ======
-const targetDate = new Date("May 20, 2026 09:00").getTime();
-
-// ====== BANCO BASE ======
-const baseQuestions = [
-{cat:"ECONOMIA",q:"Se o IPCA sobe?",o:["Selic sobe","Selic cai","Nada muda","Não influencia"],c:0,w:"Inflação alta → BC sobe juros"},
-{cat:"FGC",q:"Qual tem FGC?",o:["Ações","LCI","Debênture","FII"],c:1,w:"LCI tem garantia até 250k"}
+// ===== BANCO DE QUESTÕES (Mais fiel à CPA-10) =====
+const questions = [
+    {q:"Órgão responsável por fiscalizar o mercado de ações e derivativos:", o:["BACEN","CVM","CMN","SUSEP"], c:1},
+    {q:"Prazo máximo para comunicação de operação suspeita ao COAF:", o:["5 dias","10 dias","24 horas","30 dias"], c:2},
+    {q:"A rentabilidade que desconta a inflação é chamada de:", o:["Real","Nominal","Relativa","Absoluta"], c:0},
+    {q:"O FGC garante investimentos em CDB até o limite de:", o:["100 mil","250 mil","500 mil","1 milhão"], c:1},
+    {q:"Fase da Lavagem de Dinheiro onde o recurso volta à economia com aparência lícita:", o:["Colocação","Ocultação","Integração","Estratificação"], c:2},
+    {q:"Quem executa a política monetária e regula o meio circulante?", o:["CMN","BANCO CENTRAL","CVM","TESOURO"], c:1},
+    {q:"Investimento isento de IR para Pessoa Física:", o:["CDB","LCI","Ações (qualquer valor)","Tesouro Selic"], c:1}
 ];
 
-// ====== GERADOR (300+) ======
-function generateQuestions(){
-let arr=[...baseQuestions];
-const temas=["Selic","IPCA","FGC","Fundos","Ética"];
+// ===== DICAS PARA ÁUDIO =====
+const audioDicas = [
+    "CVM cuida de ações. Banco Central cuida da moeda.",
+    "O CMN é o órgão máximo, ele só manda, não executa nada.",
+    "LCI, LCA e Poupança são isentos de Imposto de Renda para pessoa física.",
+    "A meta de inflação é definida pelo Conselho Monetário Nacional.",
+    "Lavar dinheiro tem três fases: Colocação, Ocultação e Integração."
+];
 
-for(let i=0;i<300;i++){
-arr.push({
-cat:temas[i%temas.length],
-q:`Questão ${i}: Conceito sobre ${temas[i%temas.length]}?`,
-o:["Opção A","Opção B","Opção C","Opção D"],
-c:Math.floor(Math.random()*4),
-w:"Explicação automática"
-});
-}
-return arr;
-}
+// ===== ESTADO DO APP =====
+let state = {
+    idx: 0,
+    hits: parseInt(localStorage.getItem('hits')) || 0,
+    miss: parseInt(localStorage.getItem('miss')) || 0,
+    total: parseInt(localStorage.getItem('total')) || 0,
+    audioRunning: false,
+    timer: null
+};
 
-const questions = generateQuestions();
-
-// ====== STATE ======
-let current;
-let score=0,total=0;
-let wrong = JSON.parse(localStorage.getItem("wrong")||"[]");
-
-// ====== QUIZ ======
-function getQ(){
-if(wrong.length && Math.random()<0.4){
-return wrong[Math.floor(Math.random()*wrong.length)];
-}
-return questions[Math.floor(Math.random()*questions.length)];
+// ===== NAVEGAÇÃO =====
+function showView(v){
+    document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+    document.getElementById(v).classList.add('active');
+    if(v === 'prova') loadQuestion();
+    updateDashboard();
 }
 
-function load(){
-current = getQ();
-document.getElementById("q").innerText=current.q;
-document.getElementById("cat").innerText=current.cat;
+// ===== LÓGICA DA PROVA =====
+function loadQuestion(){
+    clearInterval(state.timer);
+    let q = questions[state.idx % questions.length];
+    document.getElementById("q").innerText = q.q;
+    
+    let opts = document.getElementById("opts");
+    opts.innerHTML = "";
 
-const opts=document.getElementById("opts");
-opts.innerHTML="";
-current.o.forEach((op,i)=>{
-let b=document.createElement("button");
-b.className="w-full bg-white/10 p-2 rounded text-xs";
-b.innerText=op;
-b.onclick=()=>answer(i);
-opts.appendChild(b);
-});
-startTimer();
+    q.o.forEach((op, i) => {
+        let btn = document.createElement("button");
+        btn.className = "btn-opt w-full glass p-4 rounded-xl text-left text-sm font-medium hover:bg-white/10";
+        btn.innerText = op;
+        btn.onclick = () => checkAnswer(i, q.c, btn);
+        opts.appendChild(btn);
+    });
+    startTimer();
 }
 
-function answer(i){
-total++;
-if(i===current.c){
-score++;
-}else{
-wrong.push(current);
-localStorage.setItem("wrong",JSON.stringify(wrong));
-}
-document.getElementById("exp").classList.remove("hidden");
-document.getElementById("exp").innerText=current.w;
-document.getElementById("next").classList.remove("hidden");
-drawChart();
-}
-
-function nextQ(){
-document.getElementById("exp").classList.add("hidden");
-document.getElementById("next").classList.add("hidden");
-load();
+function checkAnswer(chosen, correct, btn) {
+    clearInterval(state.timer);
+    state.total++;
+    if(chosen === correct) {
+        state.hits++;
+        btn.classList.add("bg-green-500/40", "border-green-500");
+    } else {
+        state.miss++;
+        btn.classList.add("bg-red-500/40", "border-red-500");
+    }
+    save();
+    setTimeout(() => {
+        state.idx++;
+        loadQuestion();
+    }, 800);
 }
 
-// ====== TIMER ======
-let t=20,interval;
 function startTimer(){
-clearInterval(interval);
-t=20;
-interval=setInterval(()=>{
-t--;
-document.getElementById("timer").innerText=t+"s";
-if(t<=0){
-clearInterval(interval);
-answer(-1);
-}
-},1000);
-}
-
-// ====== AUDIO ======
-function speak(){
-let u=new SpeechSynthesisUtterance(current.q);
-speechSynthesis.speak(u);
+    let t = 15;
+    document.getElementById("timer").innerText = t + "s";
+    state.timer = setInterval(() => {
+        t--;
+        document.getElementById("timer").innerText = t + "s";
+        if(t <= 0) {
+            state.total++;
+            state.miss++;
+            state.idx++;
+            save();
+            loadQuestion();
+        }
+    }, 1000);
 }
 
-// ====== DASHBOARD ======
-function drawChart(){
-let c=document.getElementById("chart");
-let ctx=c.getContext("2d");
-c.width=300;c.height=150;
-
-ctx.clearRect(0,0,300,150);
-let pct = total?score/total:0;
-
-ctx.fillRect(10,100,200*pct,20);
-ctx.fillText("Score: "+Math.round(pct*100)+"%",10,90);
+// ===== MODO ÁUDIO =====
+function toggleAudioMode() {
+    state.audioRunning = !state.audioRunning;
+    const btn = document.getElementById('btn-audio');
+    const wave = document.getElementById('audio-wave');
+    
+    if(state.audioRunning) {
+        btn.innerText = "⏸️";
+        wave.classList.remove('hidden');
+        speakLoop();
+    } else {
+        btn.innerText = "▶️";
+        wave.classList.add('hidden');
+        window.speechSynthesis.cancel();
+    }
 }
 
-// ====== COUNTDOWN ======
-setInterval(()=>{
-let d=targetDate-Date.now();
-document.getElementById("countdown").innerText=
-Math.floor(d/86400000)+"d";
-},1000);
-
-// ====== PWA INSTALL ======
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-deferredPrompt = e;
-});
-
-function installApp(){
-if(deferredPrompt){
-deferredPrompt.prompt();
-}
+function speakLoop() {
+    if(!state.audioRunning) return;
+    let dica = audioDicas[Math.floor(Math.random() * audioDicas.length)];
+    let u = new SpeechSynthesisUtterance(dica);
+    u.lang = 'pt-BR';
+    u.onend = () => setTimeout(speakLoop, 3000);
+    window.speechSynthesis.speak(u);
 }
 
-// ====== SERVICE WORKER ======
-if('serviceWorker' in navigator){
-const swBlob = new Blob([`
-self.addEventListener('install', e=>{
-self.skipWaiting();
-});
-self.addEventListener('fetch', e=>{
-e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));
-});
-`],{type:'text/javascript'});
-
-navigator.serviceWorker.register(URL.createObjectURL(swBlob));
+// ===== PERSISTÊNCIA =====
+function save(){
+    localStorage.setItem('hits', state.hits);
+    localStorage.setItem('miss', state.miss);
+    localStorage.setItem('total', state.total);
+    updateDashboard();
 }
 
-// START
-load();
+function updateDashboard(){
+    let pct = state.total ? Math.round((state.hits / state.total) * 100) : 0;
+    document.getElementById('dash-pct').innerText = pct + "%";
+    document.getElementById('top-score').innerText = "SCORE: " + pct + "%";
+    document.getElementById('dash-total').innerText = state.total + " questões respondidas";
+    document.getElementById('dash-hits').innerText = state.hits;
+    document.getElementById('dash-miss').innerText = state.miss;
+}
+
+function resetStats() {
+    if(confirm("Deseja resetar seu progresso?")) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+updateDashboard();
 </script>
-
 </body>
 </html>

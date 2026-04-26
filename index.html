@@ -8,11 +8,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { background: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+        body { background: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; overflow: hidden; }
         .view { display: none; }
-        .view.active { display: block; }
+        .view.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
-        .btn-press:active { transform: scale(0.95); }
+        .btn-press:active { transform: scale(0.9); }
     </style>
 </head>
 <body class="p-4 flex flex-col min-h-screen">
@@ -20,11 +21,11 @@
     <div class="max-w-md mx-auto w-full space-y-4 flex-grow">
         <header class="flex justify-between items-center px-2 py-4">
             <div>
-                <h1 class="text-2xl font-900 tracking-tighter text-blue-500 italic">CPA10<span class="text-white">ULTRA</span></h1>
-                <p id="voz-name" class="text-[9px] text-gray-500 font-bold uppercase tracking-widest italic">Aguardando Voz...</p>
+                <h1 class="text-2xl font-900 tracking-tighter text-blue-500 italic uppercase">CPA10<span class="text-white">Ultra</span></h1>
+                <p id="voz-name" class="text-[9px] text-gray-500 font-bold uppercase tracking-widest italic">Sistema Pronto</p>
             </div>
-            <div id="sync-indicator" class="flex items-center space-x-2 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
-                <div id="status-dot" class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+            <div class="flex items-center space-x-2 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
+                <div id="status-dot" class="w-2 h-2 bg-yellow-500 rounded-full"></div>
                 <span class="text-[10px] font-bold text-gray-400">SUPABASE</span>
             </div>
         </header>
@@ -37,7 +38,6 @@
                     <div id="progresso-bar" class="bg-blue-500 h-full transition-all duration-1000" style="width: 0%"></div>
                 </div>
             </div>
-
             <div class="grid grid-cols-2 gap-4">
                 <div class="glass p-5 rounded-3xl border-t-2 border-yellow-500/30">
                     <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">Dias para a Prova</p>
@@ -48,226 +48,170 @@
                     <p id="data-prova-txt" class="text-sm font-bold text-white italic">Não agendada</p>
                 </div>
             </div>
-
             <div class="glass p-5 rounded-3xl flex justify-between items-center">
-                <span class="text-[10px] text-gray-500 font-bold uppercase">Status de Inscrição</span>
+                <span class="text-[10px] text-gray-500 font-bold uppercase">Status</span>
                 <span class="text-[10px] bg-green-500/20 text-green-500 px-2 py-1 rounded-md font-bold">PAGO / CONFIRMADO</span>
             </div>
         </div>
 
         <div id="prova" class="view space-y-4">
-            <div class="flex justify-between items-center px-1">
-                <span class="text-[10px] font-black text-yellow-500 bg-yellow-500/10 px-3 py-1 rounded-full">SIMULADO REAL</span>
-                <div id="timer" class="text-2xl font-black text-yellow-500 font-mono">180s</div>
-            </div>
             <div class="glass p-8 rounded-[32px] min-h-[160px] flex items-center shadow-2xl">
-                <p id="q-txt" class="text-lg font-bold leading-tight italic text-blue-100">Carregando simulado...</p>
+                <p id="q-txt" class="text-lg font-bold leading-tight">Carregando questão...</p>
             </div>
             <div id="opts-container" class="space-y-3"></div>
         </div>
 
         <div id="maratona" class="view space-y-6 text-center">
-            <div class="glass p-12 rounded-[56px] relative shadow-inner">
+            <div class="glass p-12 rounded-[56px] relative">
                 <div id="pulse-ring" class="hidden absolute inset-0 rounded-[56px] border-4 border-blue-500/30 animate-ping"></div>
-                <button onclick="toggleMaratona()" id="btn-maratona" class="btn-press relative z-10 w-28 h-28 bg-blue-600 rounded-full text-4xl shadow-xl flex items-center justify-center mx-auto">▶️</button>
+                <button onclick="handlePlay()" id="btn-maratona" class="btn-press relative z-10 w-28 h-28 bg-blue-600 rounded-full text-4xl shadow-xl flex items-center justify-center mx-auto">▶️</button>
                 <h2 class="mt-8 font-black text-2xl uppercase tracking-tighter">Modo Direção</h2>
-                <p class="text-gray-500 text-[10px] mt-2 font-bold uppercase tracking-widest italic italic">Ouvir & Refletir</p>
             </div>
             <div class="bg-blue-900/10 p-6 rounded-3xl border border-blue-500/10 min-h-[120px] flex items-center justify-center">
-                <p id="current-q" class="text-sm text-blue-300 font-medium leading-relaxed italic">Clique no Play para iniciar.</p>
+                <p id="current-q" class="text-sm text-blue-300 font-medium leading-relaxed italic">Pronto para iniciar.</p>
             </div>
         </div>
     </div>
 
     <nav class="max-w-md mx-auto w-full glass p-4 rounded-[32px] flex justify-around mb-6 shadow-2xl">
-        <button onclick="showView('dash')" class="btn-press text-2xl filter drop-shadow-lg">📊</button>
-        <button onclick="showView('prova')" class="btn-press text-2xl filter drop-shadow-lg">🧪</button>
-        <button onclick="showView('maratona')" class="btn-press text-2xl filter drop-shadow-lg">🎧</button>
+        <button onclick="changeTab('dash')" class="btn-press p-2 text-2xl">📊</button>
+        <button onclick="changeTab('prova')" class="btn-press p-2 text-2xl">🧪</button>
+        <button onclick="changeTab('maratona')" class="btn-press p-2 text-2xl">🎧</button>
     </nav>
 
 <script>
-// CONFIGURAÇÕES
-const SB_URL = "https://wfoysxuynbcuxybkqmfz.supabase.co";
-const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indmb3lzeHV5bmJjdXh5YmtxbWZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3OTk3NDcsImV4cCI6MjA4ODM3NTc0N30.v28Tj6z6PrnyUk_kFSvvchjzwHmV7ZXcJH903hQTiZg";
-let supabase;
-
-let app = { 
-    idx: 0, 
-    playing: false, 
-    questions: [], 
-    voice: null, 
-    userId: 'allisson',
-    version: "2.1.0-MAC_FIX"
+// CONFIGURAÇÕES GLOBAIS
+const CONFIG = {
+    url: "https://wfoysxuynbcuxybkqmfz.supabase.co",
+    key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indmb3lzeHV5bmJjdXh5YmtxbWZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3OTk3NDcsImV4cCI6MjA4ODM3NTc0N30.v28Tj6z6PrnyUk_kFSvvchjzwHmV7ZXcJH903hQTiZg",
+    userId: 'allisson'
 };
 
-// 1. FUNÇÃO DE NAVEGAÇÃO (Sem dependências para não travar)
-function showView(viewId) {
-    console.log("Navegando para:", viewId);
-    const views = ['dash', 'prova', 'maratona'];
-    views.forEach(v => {
-        const el = document.getElementById(v);
-        if(el) el.classList.remove('active');
-    });
+let state = { idx: 0, questions: [], playing: false, voice: null, db: null };
+
+// 1. TROCA DE ABA (Independente de banco de dados)
+function changeTab(id) {
+    console.log("Tentando mudar para:", id);
+    const views = document.querySelectorAll('.view');
+    views.forEach(v => v.classList.remove('active'));
     
-    const target = document.getElementById(viewId);
+    const target = document.getElementById(id);
     if(target) {
         target.classList.add('active');
-    } else {
-        console.error("View não encontrada:", viewId);
     }
 
-    if(viewId === 'prova') startSimulado();
-    if(viewId !== 'maratona' && app.playing) stopMaratona();
+    if(id === 'prova') renderSimulado();
+    if(id !== 'maratona' && state.playing) stopAudio();
 }
 
-// 2. INICIALIZAÇÃO BLINDADA
-window.addEventListener('DOMContentLoaded', async () => {
-    console.log("App Versão:", app.version);
+// 2. INICIALIZAÇÃO
+window.onload = async () => {
+    console.log("v2.2.0 Iniciada");
+    initVoice();
+    
     try {
-        if (typeof window.supabase === 'undefined') {
-            throw new Error("Biblioteca Supabase não encontrada!");
+        if (typeof window.supabase !== 'undefined') {
+            state.db = window.supabase.createClient(CONFIG.url, CONFIG.key);
+            await loadData();
         }
-        supabase = window.supabase.createClient(SB_URL, SB_KEY);
-        await initData();
     } catch (e) {
-        console.error("Erro fatal:", e.message);
-        document.getElementById('voz-name').innerText = "ERRO DE CONEXÃO";
+        console.error("Erro na carga de dados:", e);
     }
-});
+};
 
-async function initData() {
-    console.log("Buscando dados no Supabase...");
-    
-    try {
-        const [progRes, qsRes] = await Promise.all([
-            supabase.from('cpa10_progresso').select('*').eq('user_id', app.userId).maybeSingle(),
-            supabase.from('cpa10_maratona').select('*').order('id', { ascending: true })
-        ]);
+async function loadData() {
+    const { data: qs } = await state.db.from('cpa10_maratona').select('*').order('id');
+    const { data: prog } = await state.db.from('cpa10_progresso').select('*').eq('user_id', CONFIG.userId).maybeSingle();
 
-        if(progRes.data) {
-            app.idx = progRes.data.maratona_idx || 0;
-            if(progRes.data.data_prova) updateCountdown(progRes.data.data_prova);
-        }
-
-        app.questions = qsRes.data || [];
-        console.log("Questões carregadas:", app.questions.length);
-        
-        document.getElementById('status-dot').classList.replace('bg-red-500', 'bg-green-500');
-        updateUI();
-        initVoice();
-    } catch (err) {
-        console.error("Erro ao carregar dados:", err);
+    if(qs) state.questions = qs;
+    if(prog) {
+        state.idx = prog.maratona_idx || 0;
+        if(prog.data_prova) updateDays(prog.data_prova);
     }
+
+    document.getElementById('status-dot').classList.replace('bg-yellow-500', 'bg-green-500');
+    updateUI();
 }
 
-// 3. LÓGICA DE ÁUDIO
+// 3. ÁUDIO E MARATONA
 function initVoice() {
-    const setVoice = () => {
-        const voices = window.speechSynthesis.getVoices();
-        app.voice = voices.find(v => v.lang.includes('pt-BR')) || 
-                    voices.find(v => v.lang.includes('pt')) || 
-                    voices[0];
-        if(app.voice) document.getElementById('voz-name').innerText = "Voz: " + app.voice.name.split(' ')[0];
+    const getV = () => {
+        const vs = window.speechSynthesis.getVoices();
+        state.voice = vs.find(v => v.lang.includes('pt-BR')) || vs[0];
     };
-    setVoice();
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = setVoice;
-    }
+    getV();
+    window.speechSynthesis.onvoiceschanged = getV;
 }
 
-async function toggleMaratona() {
-    if(app.questions.length === 0) return alert("Banco de questões vazio!");
-    
-    app.playing = !app.playing;
-    document.getElementById('btn-maratona').innerText = app.playing ? "⏸️" : "▶️";
-    document.getElementById('pulse-ring').classList.toggle('hidden', !app.playing);
-    
-    if(app.playing) runMaratonaLoop();
+function handlePlay() {
+    state.playing = !state.playing;
+    document.getElementById('btn-maratona').innerText = state.playing ? "⏸️" : "▶️";
+    document.getElementById('pulse-ring').classList.toggle('hidden', !state.playing);
+    if(state.playing) loopMaratona();
     else window.speechSynthesis.cancel();
 }
 
-function stopMaratona() {
-    app.playing = false;
+function stopAudio() {
+    state.playing = false;
     document.getElementById('btn-maratona').innerText = "▶️";
     document.getElementById('pulse-ring').classList.add('hidden');
     window.speechSynthesis.cancel();
 }
 
-async function runMaratonaLoop() {
-    if(!app.playing || app.idx >= app.questions.length) {
-        if(app.idx >= app.questions.length) {
-            document.getElementById('current-q').innerText = "Maratona concluída!";
-            stopMaratona();
-        }
-        return;
-    };
+async function loopMaratona() {
+    if(!state.playing || state.idx >= state.questions.length) return;
 
-    let q = app.questions[app.idx];
+    let q = state.questions[state.idx];
     document.getElementById('current-q').innerText = q.pergunta;
 
     await speak(q.pergunta);
-    if(!app.playing) return;
+    await new Promise(r => setTimeout(r, 5000));
     
-    await new Promise(r => setTimeout(r, 5000)); // Tempo para pensar
+    if(!state.playing) return;
+    await speak("Resposta: " + q.resposta);
     
-    if(!app.playing) return;
-    await speak("Resposta correta: " + q.resposta);
-    
-    app.idx++;
+    state.idx++;
     updateUI();
-    saveProgressToCloud();
-    
-    if(app.playing) setTimeout(runMaratonaLoop, 2000);
+    saveProgress();
+    setTimeout(loopMaratona, 2000);
 }
 
-function speak(text) {
-    return new Promise(resolve => {
-        window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.voice = app.voice;
-        u.rate = 0.9;
-        u.onend = resolve;
-        u.onerror = resolve;
+function speak(t) {
+    return new Promise(res => {
+        const u = new SpeechSynthesisUtterance(t);
+        u.voice = state.voice;
+        u.onend = res;
         window.speechSynthesis.speak(u);
     });
 }
 
-// 4. UTILITÁRIOS
-async function saveProgressToCloud() {
-    const dot = document.getElementById('status-dot');
-    dot.classList.add('animate-spin');
-    await supabase.from('cpa10_progresso').update({ maratona_idx: app.idx }).eq('user_id', app.userId);
-    dot.classList.remove('animate-spin');
-}
-
-function updateCountdown(dataStr) {
-    const prova = new Date(dataStr);
-    const hoje = new Date();
-    const diff = Math.ceil((prova - hoje) / (1000 * 60 * 60 * 24));
-    document.getElementById('days-countdown').innerText = diff > 0 ? diff + "d" : "HOJE";
-    document.getElementById('data-prova-txt').innerText = prova.toLocaleDateString('pt-BR');
-}
-
+// 4. UI E APOIO
 function updateUI() {
-    const total = app.questions.length || 0;
-    const atual = total > 0 ? app.idx : 0;
-    const pct = total > 0 ? (atual / total) * 100 : 0;
-    
+    const total = state.questions.length;
+    const pct = total > 0 ? (state.idx / total) * 100 : 0;
     document.getElementById('progresso-bar').style.width = pct + "%";
-    document.getElementById('progresso-txt').innerText = `${atual}/${total}`;
+    document.getElementById('progresso-txt').innerText = `${state.idx}/${total}`;
 }
 
-function startSimulado() {
-    if(app.questions.length === 0) return;
-    const rand = Math.floor(Math.random() * app.questions.length);
-    const q = app.questions[rand];
-    document.getElementById('q-txt').innerText = q.pergunta;
+function updateDays(d) {
+    const p = new Date(d);
+    const h = new Date();
+    const diff = Math.ceil((p - h) / (86400000));
+    document.getElementById('days-countdown').innerText = diff + "d";
+    document.getElementById('data-prova-txt').innerText = p.toLocaleDateString('pt-BR');
+}
+
+async function saveProgress() {
+    if(state.db) await state.db.from('cpa10_progresso').update({ maratona_idx: state.idx }).eq('user_id', CONFIG.userId);
+}
+
+function renderSimulado() {
+    if(state.questions.length > 0) {
+        const q = state.questions[Math.floor(Math.random() * state.questions.length)];
+        document.getElementById('q-txt').innerText = q.pergunta;
+    }
 }
 </script>
-
-<footer class="text-center pb-2">
-    <p class="text-[8px] text-gray-700 font-mono">v2.1.0-MAC_FIX | Allisson Dantas Silva</p>
-</footer>
-
+<footer class="text-center pb-2 text-[8px] opacity-30 font-mono">v2.2.0-ULTRA_STABLE | Allisson</footer>
 </body>
 </html>

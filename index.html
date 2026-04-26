@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPA-10 Dash - Allisson</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .progress-bar { transition: width 0.5s ease-in-out; }
+        .card { background: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .option-btn { transition: all 0.2s; border: 1px solid #e2e8f0; }
+        .option-btn:active { transform: scale(0.98); }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen p-4 font-sans mb-10">
+
+    <div class="max-w-md mx-auto space-y-6">
+        
+        <div class="card p-6 bg-slate-900 text-white text-center border-b-4 border-blue-500">
+            <h1 class="text-xl font-black uppercase tracking-tighter italic text-blue-500">CPA-10 Mission</h1>
+            <div id="countdown" class="text-3xl font-mono mt-3 font-bold text-white">
+                --d --h --m --s
+            </div>
+            <p class="text-[10px] mt-2 opacity-50 font-bold uppercase">Meta Sugerida: 20 de Maio</p>
+        </div>
+
+        <div class="card p-6">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold text-slate-500 uppercase">Status da Missão</span>
+                <span id="progress-text" class="text-sm font-black text-blue-600">0%</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-3">
+                <div id="progress-bar" class="bg-blue-600 h-3 rounded-full progress-bar" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="card p-6 border-l-4 border-amber-400">
+            <h2 class="text-sm font-black text-slate-700 mb-4 uppercase flex items-center">
+                <span class="mr-2">🚀</span> Treino de Questão
+            </h2>
+            <div id="quiz-container">
+                <p id="quiz-question" class="text-slate-800 font-bold text-sm mb-4 leading-relaxed italic">Carregando...</p>
+                <div id="quiz-options" class="space-y-2"></div>
+            </div>
+        </div>
+
+        <div class="card p-6">
+            <h2 class="text-sm font-black text-slate-700 mb-4 uppercase">📅 Roadmap Semanal</h2>
+            
+            <div class="space-y-6">
+                <div class="border-l-2 border-blue-200 pl-4">
+                    <h3 class="font-black text-blue-600 text-[10px] uppercase tracking-widest">Semana 1: O Backend</h3>
+                    <div class="mt-2 space-y-2">
+                        <label class="flex items-center space-x-3 text-xs font-medium"><input type="checkbox" class="task-check w-4 h-4 rounded"> <span>Sistema Financeiro (SFN)</span></label>
+                        <label class="flex items-center space-x-3 text-xs font-medium"><input type="checkbox" class="task-check w-4 h-4 rounded"> <span>Lavagem de Dinheiro (PLD)</span></label>
+                    </div>
+                </div>
+
+                <div class="border-l-2 border-emerald-200 pl-4">
+                    <h3 class="font-black text-emerald-600 text-[10px] uppercase tracking-widest">Semana 2: O Core</h3>
+                    <div class="mt-2 space-y-2">
+                        <label class="flex items-center space-x-3 text-xs font-medium"><input type="checkbox" class="task-check w-4 h-4 rounded"> <span>Fundos de Investimento</span></label>
+                        <label class="flex items-center space-x-3 text-xs font-medium"><input type="checkbox" class="task-check w-4 h-4 rounded"> <span>Renda Fixa / Variável</span></label>
+                        <label class="flex items-center space-x-3 text-xs font-medium"><input type="checkbox" class="task-check w-4 h-4 rounded"> <span>Tributação (IR/IOF)</span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-4 bg-emerald-50 border border-emerald-100 text-center">
+            <h3 class="text-[10px] font-black text-emerald-700 uppercase mb-3">Escute no Carro</h3>
+            <div class="flex space-x-2">
+                <a href="https://open.spotify.com/show/06lS6vU8U86M6xM7G2M1P4" target="_blank" class="flex-1 bg-emerald-600 text-white p-2 rounded text-[10px] font-bold uppercase">Spotify</a>
+                <a href="https://www.youtube.com/@EdgarAbreu" target="_blank" class="flex-1 bg-red-600 text-white p-2 rounded text-[10px] font-bold uppercase">YouTube</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const targetDate = new Date("May 20, 2026 09:00:00").getTime();
+        
+        const questions = [
+            { q: "Qual a função do CMN?", options: ["Executar a política monetária", "Fixar as diretrizes da política de moeda e crédito", "Fiscalizar a bolsa de valores", "Gerir as reservas internacionais"], correct: 1 },
+            { q: "Fase da Lavagem de Dinheiro que visa distanciar o dinheiro da origem?", options: ["Colocação", "Ocultação", "Integração", "Mesclagem"], correct: 1 },
+            { q: "O investidor que busca isenção de IR em ações (pessoa física) deve vender até quanto no mês?", options: ["R$ 10.000", "R$ 15.000", "R$ 20.000", "R$ 35.000"], correct: 2 },
+            { q: "Qual o prazo máximo para o banco comunicar transações suspeitas ao COAF?", options: ["24 horas", "48 horas", "5 dias úteis", "30 dias"], correct: 0 },
+            { q: "O FGC garante investimentos até qual valor por CPF e por instituição?", options: ["R$ 50.000", "R$ 100.000", "R$ 250.000", "R$ 500.000"], correct: 2 }
+        ];
+
+        // Timer
+        setInterval(() => {
+            const now = new Date().getTime();
+            const dist = targetDate - now;
+            document.getElementById("countdown").innerHTML = `${Math.floor(dist/(1000*60*60*24))}d ${Math.floor((dist%(1000*60*60*24))/(1000*60*60))}h ${Math.floor((dist%(1000*60*60))/(1000*60))}m`;
+        }, 1000);
+
+        // Progress
+        const checks = document.querySelectorAll('.task-check');
+        checks.forEach(c => c.addEventListener('change', () => {
+            const pct = Math.round((document.querySelectorAll('.task-check:checked').length / checks.length) * 100);
+            document.getElementById('progress-bar').style.width = pct + '%';
+            document.getElementById('progress-text').innerText = pct + '%';
+        }));
+
+        // Quiz
+        function loadQuiz() {
+            const r = questions[Math.floor(Math.random() * questions.length)];
+            document.getElementById('quiz-question').innerText = r.q;
+            const optDiv = document.getElementById('quiz-options');
+            optDiv.innerHTML = '';
+            r.options.forEach((o, i) => {
+                const b = document.createElement('button');
+                b.className = "option-btn w-full text-left p-3 rounded-lg text-xs font-bold text-slate-600 bg-white";
+                b.innerText = o;
+                b.onclick = () => {
+                    if(i === r.correct) { b.classList.add('bg-emerald-500', 'text-white'); setTimeout(loadQuiz, 1500); }
+                    else { b.classList.add('bg-red-500', 'text-white'); }
+                };
+                optDiv.appendChild(b);
+            });
+        }
+        loadQuiz();
+    </script>
+</body>
+</html>

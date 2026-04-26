@@ -13,7 +13,7 @@
         .view.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
-        .btn-press:active { transform: scale(0.9); }
+        .btn-press:active { transform: scale(0.95); }
     </style>
 </head>
 <body class="p-4 flex flex-col min-h-screen">
@@ -22,10 +22,10 @@
         <header class="flex justify-between items-center px-2 py-4">
             <div>
                 <h1 class="text-2xl font-900 tracking-tighter text-blue-500 italic uppercase">CPA10<span class="text-white">Ultra</span></h1>
-                <p id="voz-name" class="text-[9px] text-gray-500 font-bold uppercase tracking-widest italic">Sistema Pronto</p>
+                <p id="voz-name" class="text-[9px] text-gray-500 font-bold uppercase tracking-widest italic italic">Sistema Pronto</p>
             </div>
             <div class="flex items-center space-x-2 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
-                <div id="status-dot" class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                <div id="status-dot" class="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span class="text-[10px] font-bold text-gray-400">SUPABASE</span>
             </div>
         </header>
@@ -45,78 +45,70 @@
                 </div>
                 <div class="glass p-5 rounded-3xl text-right">
                     <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">Data Agendada</p>
-                    <p id="data-prova-txt" class="text-sm font-bold text-white italic">Não agendada</p>
+                    <p id="data-prova-txt" class="text-sm font-bold text-white italic italic">Não agendada</p>
                 </div>
             </div>
             <div class="glass p-5 rounded-3xl flex justify-between items-center">
                 <span class="text-[10px] text-gray-500 font-bold uppercase">Status</span>
-                <span class="text-[10px] bg-green-500/20 text-green-500 px-2 py-1 rounded-md font-bold">PAGO / CONFIRMADO</span>
+                <span class="text-[10px] bg-green-500/20 text-green-500 px-2 py-1 rounded-md font-bold italic italic">PAGO / CONFIRMADO</span>
             </div>
         </div>
 
         <div id="prova" class="view space-y-4">
-            <div class="glass p-8 rounded-[32px] min-h-[160px] flex items-center shadow-2xl">
-                <p id="q-txt" class="text-lg font-bold leading-tight">Carregando questão...</p>
+            <div class="flex justify-between items-center px-1">
+                <span class="text-[10px] font-black text-yellow-500 bg-yellow-500/10 px-3 py-1 rounded-full uppercase">Modo Simulado</span>
+                <div id="timer" class="text-2xl font-black text-yellow-500 font-mono tracking-tighter">180s</div>
             </div>
-            <div id="opts-container" class="space-y-3"></div>
+            <div class="glass p-8 rounded-[32px] min-h-[160px] flex items-center shadow-2xl">
+                <p id="q-txt" class="text-lg font-bold leading-tight italic italic text-blue-100">Carregando questão...</p>
+            </div>
+            <div id="opts-container" class="grid gap-3"></div>
         </div>
 
         <div id="maratona" class="view space-y-6 text-center">
             <div class="glass p-12 rounded-[56px] relative">
                 <div id="pulse-ring" class="hidden absolute inset-0 rounded-[56px] border-4 border-blue-500/30 animate-ping"></div>
                 <button onclick="handlePlay()" id="btn-maratona" class="btn-press relative z-10 w-28 h-28 bg-blue-600 rounded-full text-4xl shadow-xl flex items-center justify-center mx-auto">▶️</button>
-                <h2 class="mt-8 font-black text-2xl uppercase tracking-tighter">Modo Direção</h2>
+                <h2 class="mt-8 font-black text-2xl uppercase tracking-tighter italic italic">Modo Direção</h2>
             </div>
             <div class="bg-blue-900/10 p-6 rounded-3xl border border-blue-500/10 min-h-[120px] flex items-center justify-center">
-                <p id="current-q" class="text-sm text-blue-300 font-medium leading-relaxed italic">Pronto para iniciar.</p>
+                <p id="current-q" class="text-sm text-blue-300 font-medium leading-relaxed italic italic">Pronto para iniciar.</p>
             </div>
         </div>
     </div>
 
     <nav class="max-w-md mx-auto w-full glass p-4 rounded-[32px] flex justify-around mb-6 shadow-2xl">
-        <button onclick="changeTab('dash')" class="btn-press p-2 text-2xl">📊</button>
-        <button onclick="changeTab('prova')" class="btn-press p-2 text-2xl">🧪</button>
-        <button onclick="changeTab('maratona')" class="btn-press p-2 text-2xl">🎧</button>
+        <button onclick="changeTab('dash')" class="btn-press p-2 text-2xl filter drop-shadow-md">📊</button>
+        <button onclick="changeTab('prova')" class="btn-press p-2 text-2xl filter drop-shadow-md">🧪</button>
+        <button onclick="changeTab('maratona')" class="btn-press p-2 text-2xl filter drop-shadow-md">🎧</button>
     </nav>
 
 <script>
-// CONFIGURAÇÕES GLOBAIS
 const CONFIG = {
     url: "https://wfoysxuynbcuxybkqmfz.supabase.co",
     key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indmb3lzeHV5bmJjdXh5YmtxbWZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3OTk3NDcsImV4cCI6MjA4ODM3NTc0N30.v28Tj6z6PrnyUk_kFSvvchjzwHmV7ZXcJH903hQTiZg",
     userId: 'allisson'
 };
 
-let state = { idx: 0, questions: [], playing: false, voice: null, db: null };
+let state = { idx: 0, questions: [], playing: false, voice: null, db: null, timer: 180, tInterval: null };
 
-// 1. TROCA DE ABA (Independente de banco de dados)
 function changeTab(id) {
-    console.log("Tentando mudar para:", id);
     const views = document.querySelectorAll('.view');
     views.forEach(v => v.classList.remove('active'));
-    
-    const target = document.getElementById(id);
-    if(target) {
-        target.classList.add('active');
-    }
+    document.getElementById(id).classList.add('active');
 
-    if(id === 'prova') renderSimulado();
+    if(id === 'prova') startSimulado();
+    else { clearInterval(state.tInterval); }
+    
     if(id !== 'maratona' && state.playing) stopAudio();
 }
 
-// 2. INICIALIZAÇÃO
 window.onload = async () => {
-    console.log("v2.2.0 Iniciada");
     initVoice();
-    
     try {
-        if (typeof window.supabase !== 'undefined') {
-            state.db = window.supabase.createClient(CONFIG.url, CONFIG.key);
-            await loadData();
-        }
-    } catch (e) {
-        console.error("Erro na carga de dados:", e);
-    }
+        state.db = window.supabase.createClient(CONFIG.url, CONFIG.key);
+        await loadData();
+    } catch (e) { console.error(e); }
 };
 
 async function loadData() {
@@ -128,17 +120,50 @@ async function loadData() {
         state.idx = prog.maratona_idx || 0;
         if(prog.data_prova) updateDays(prog.data_prova);
     }
-
-    document.getElementById('status-dot').classList.replace('bg-yellow-500', 'bg-green-500');
     updateUI();
 }
 
-// 3. ÁUDIO E MARATONA
+// SIMULADO LÓGICA
+function startSimulado() {
+    if(state.questions.length === 0) return;
+    clearInterval(state.tInterval);
+    state.timer = 180;
+    
+    const q = state.questions[Math.floor(Math.random() * state.questions.length)];
+    document.getElementById('q-txt').innerText = q.pergunta;
+    
+    // Gera alternativas fakes + a correta
+    const container = document.getElementById('opts-container');
+    container.innerHTML = "";
+    
+    // Lista simplificada para o exemplo (usa a resposta real e 3 distrações)
+    const opts = [q.resposta, "CVM", "Banco Central", "ANBIMA"].sort(() => Math.random() - 0.5);
+    
+    opts.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = "glass p-4 rounded-2xl text-left text-sm font-bold btn-press border border-white/5";
+        btn.innerText = opt;
+        btn.onclick = () => {
+            if(opt === q.resposta) {
+                btn.classList.add('bg-green-500/20', 'border-green-500');
+                setTimeout(startSimulado, 1000);
+            } else {
+                btn.classList.add('bg-red-500/20', 'border-red-500');
+            }
+        };
+        container.appendChild(btn);
+    });
+
+    state.tInterval = setInterval(() => {
+        state.timer--;
+        document.getElementById('timer').innerText = state.timer + "s";
+        if(state.timer <= 0) { clearInterval(state.tInterval); startSimulado(); }
+    }, 1000);
+}
+
+// ÁUDIO E UI
 function initVoice() {
-    const getV = () => {
-        const vs = window.speechSynthesis.getVoices();
-        state.voice = vs.find(v => v.lang.includes('pt-BR')) || vs[0];
-    };
+    const getV = () => { state.voice = window.speechSynthesis.getVoices().find(v => v.lang.includes('pt-BR')) || window.speechSynthesis.getVoices()[0]; };
     getV();
     window.speechSynthesis.onvoiceschanged = getV;
 }
@@ -151,67 +176,26 @@ function handlePlay() {
     else window.speechSynthesis.cancel();
 }
 
-function stopAudio() {
-    state.playing = false;
-    document.getElementById('btn-maratona').innerText = "▶️";
-    document.getElementById('pulse-ring').classList.add('hidden');
-    window.speechSynthesis.cancel();
-}
-
 async function loopMaratona() {
     if(!state.playing || state.idx >= state.questions.length) return;
-
     let q = state.questions[state.idx];
     document.getElementById('current-q').innerText = q.pergunta;
-
     await speak(q.pergunta);
     await new Promise(r => setTimeout(r, 5000));
-    
     if(!state.playing) return;
     await speak("Resposta: " + q.resposta);
-    
     state.idx++;
     updateUI();
     saveProgress();
     setTimeout(loopMaratona, 2000);
 }
 
-function speak(t) {
-    return new Promise(res => {
-        const u = new SpeechSynthesisUtterance(t);
-        u.voice = state.voice;
-        u.onend = res;
-        window.speechSynthesis.speak(u);
-    });
-}
-
-// 4. UI E APOIO
-function updateUI() {
-    const total = state.questions.length;
-    const pct = total > 0 ? (state.idx / total) * 100 : 0;
-    document.getElementById('progresso-bar').style.width = pct + "%";
-    document.getElementById('progresso-txt').innerText = `${state.idx}/${total}`;
-}
-
-function updateDays(d) {
-    const p = new Date(d);
-    const h = new Date();
-    const diff = Math.ceil((p - h) / (86400000));
-    document.getElementById('days-countdown').innerText = diff + "d";
-    document.getElementById('data-prova-txt').innerText = p.toLocaleDateString('pt-BR');
-}
-
-async function saveProgress() {
-    if(state.db) await state.db.from('cpa10_progresso').update({ maratona_idx: state.idx }).eq('user_id', CONFIG.userId);
-}
-
-function renderSimulado() {
-    if(state.questions.length > 0) {
-        const q = state.questions[Math.floor(Math.random() * state.questions.length)];
-        document.getElementById('q-txt').innerText = q.pergunta;
-    }
-}
+function speak(t) { return new Promise(res => { const u = new SpeechSynthesisUtterance(t); u.voice = state.voice; u.onend = res; window.speechSynthesis.speak(u); }); }
+function stopAudio() { state.playing = false; document.getElementById('btn-maratona').innerText = "▶️"; window.speechSynthesis.cancel(); }
+function updateUI() { document.getElementById('progresso-bar').style.width = (state.idx / state.questions.length * 100) + "%"; document.getElementById('progresso-txt').innerText = `${state.idx}/${state.questions.length}`; }
+function updateDays(d) { const diff = Math.ceil((new Date(d) - new Date()) / 86400000); document.getElementById('days-countdown').innerText = diff + "d"; document.getElementById('data-prova-txt').innerText = new Date(d).toLocaleDateString('pt-BR'); }
+async function saveProgress() { if(state.db) await state.db.from('cpa10_progresso').update({ maratona_idx: state.idx }).eq('user_id', CONFIG.userId); }
 </script>
-<footer class="text-center pb-2 text-[8px] opacity-30 font-mono">v2.2.0-ULTRA_STABLE | Allisson</footer>
+<footer class="text-center pb-2 text-[8px] opacity-30 font-mono italic italic">v2.3.0-PROVA_TOTAL | Allisson</footer>
 </body>
 </html>

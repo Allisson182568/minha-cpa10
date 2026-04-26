@@ -3,108 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPA-10 PRO Dashboard - Allisson</title>
+    <title>CPA-10 ULTRA - Allisson</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .neon-border { border-left: 4px solid #3b82f6; box-shadow: -10px 0 20px -10px rgba(59, 130, 246, 0.5); }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        .btn-option { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .btn-option:hover { transform: translateX(8px); background: rgba(59, 130, 246, 0.1); border-color: #3b82f6; }
-        @keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-        .pulse { animation: pulse-soft 2s infinite; }
+        body { font-family: 'Inter', sans-serif; background-color: #020617; color: #f8fafc; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.05); }
+        .neon-text { text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+        .btn-audio { background: linear-gradient(135deg, #1db954 0%, #191414 100%); }
     </style>
 </head>
-<body class="pb-10">
+<body class="pb-20">
 
     <div class="max-w-md mx-auto p-4 space-y-6">
         
-        <header class="glass rounded-3xl p-6 text-center space-y-2 relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-2"><span class="text-[10px] bg-blue-600 px-2 py-1 rounded-full font-bold uppercase">Pro Version</span></div>
-            <h1 class="text-xs font-black tracking-[0.3em] text-blue-400 uppercase">Mastering ANBIMA</h1>
-            <div id="countdown" class="text-4xl mono font-bold text-white tracking-tighter py-2">00d 00h 00m</div>
-            <div class="flex justify-center items-center space-x-2 text-[10px] text-slate-400 font-bold uppercase">
-                <span class="w-2 h-2 bg-green-500 rounded-full pulse"></span>
-                <span>Inscrição Confirmada • Meta 20/05</span>
-            </div>
+        <header class="glass rounded-[2rem] p-8 text-center relative border-b-4 border-blue-600">
+            <h1 class="text-[10px] font-black tracking-[0.4em] text-blue-500 uppercase mb-2">Transição de Carreira</h1>
+            <div id="countdown" class="text-4xl font-black text-white tracking-tighter neon-text">--d --h --m</div>
+            <p class="text-[9px] text-slate-500 mt-2 font-bold uppercase italic">Destino: Certificação ANBIMA</p>
         </header>
 
-        <div class="grid grid-cols-2 gap-4">
-            <div class="glass rounded-2xl p-4">
-                <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Seu Progresso</p>
-                <div class="flex items-end space-x-2">
-                    <span id="progress-text" class="text-2xl font-black text-blue-500">0%</span>
-                    <div class="flex-1 bg-slate-700 h-1.5 rounded-full mb-2">
-                        <div id="progress-bar" class="bg-blue-500 h-1.5 rounded-full transition-all duration-700" style="width: 0%"></div>
-                    </div>
-                </div>
+        <section class="glass rounded-[2rem] p-6 border border-blue-500/20">
+            <div class="flex justify-between items-center mb-6">
+                <span id="q-category" class="text-[9px] bg-blue-600/20 text-blue-400 px-3 py-1 rounded-full font-black uppercase">Simulado Real</span>
+                <span id="score-text" class="text-[10px] font-mono font-bold text-slate-400">SCORE: 0/0</span>
             </div>
-            <div class="glass rounded-2xl p-4">
-                <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Score Treino</p>
-                <span id="score-text" class="text-2xl font-black text-emerald-500">0/0</span>
-            </div>
-        </div>
-
-        <section class="glass rounded-3xl p-6 neon-border">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xs font-black uppercase tracking-widest text-slate-400">Desafio Diário</h2>
-                <span id="q-category" class="text-[9px] bg-slate-700 px-2 py-1 rounded font-bold">MÓDULO 1</span>
-            </div>
+            
             <div id="quiz-box">
-                <p id="q-text" class="text-sm font-bold leading-relaxed mb-6 italic">Carregando lógica do mercado...</p>
+                <p id="q-text" class="text-base font-bold leading-tight mb-8">Carregando banco de dados...</p>
                 <div id="q-options" class="space-y-3"></div>
-                <div id="q-explanation" class="hidden mt-6 p-4 bg-blue-900/30 rounded-xl border border-blue-500/30 text-xs leading-relaxed"></div>
-                <button id="next-btn" class="hidden w-full mt-4 bg-blue-600 hover:bg-blue-500 text-white font-black py-3 rounded-xl text-xs uppercase tracking-widest transition">Próxima Questão</button>
+                
+                <div id="q-explanation" class="hidden mt-6 p-4 bg-slate-800/50 rounded-2xl border border-white/5 text-[11px] leading-relaxed italic text-slate-300"></div>
+                
+                <button id="next-btn" class="hidden w-full mt-6 bg-white text-black font-black py-4 rounded-2xl text-[10px] uppercase tracking-[0.2em] transition hover:bg-blue-500 hover:text-white">Próximo Desafio</button>
             </div>
         </section>
 
-        <section class="glass rounded-3xl p-6">
-            <h2 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-6 italic underline decoration-blue-500">Roadmap de Estudos</h2>
-            <div class="space-y-6">
-                <div class="relative pl-6 border-l border-slate-700">
-                    <div class="absolute -left-[5px] top-0 w-2 h-2 bg-blue-500 rounded-full shadow-[0_0_10px_#3b82f6]"></div>
-                    <h3 class="text-[11px] font-black text-blue-400 uppercase mb-3">Semana 1: Compliance e Estrutura</h3>
-                    <div class="grid gap-2">
-                        <label class="flex items-center space-x-3 text-xs p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
-                            <input type="checkbox" class="task-check w-4 h-4 rounded border-slate-600 bg-slate-700">
-                            <span>Sistema Financeiro Nacional (SFN)</span>
-                        </label>
-                        <label class="flex items-center space-x-3 text-xs p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
-                            <input type="checkbox" class="task-check w-4 h-4 rounded border-slate-600 bg-slate-700">
-                            <span>Lavagem de Dinheiro (PLD)</span>
-                        </label>
+        <section class="space-y-3">
+            <h2 class="text-[10px] font-black text-slate-500 uppercase px-4 tracking-widest italic">Car Audio Mode - Playlists Reais</h2>
+            <div class="grid grid-cols-1 gap-3">
+                <a href="https://open.spotify.com/show/472aXpXf8O09zU89G1r4O6" target="_blank" class="btn-audio p-5 rounded-[1.5rem] flex items-center justify-between group transition-transform active:scale-95">
+                    <div class="flex items-center space-x-4">
+                        <span class="text-2xl">🎧</span>
+                        <div>
+                            <p class="text-xs font-black text-white uppercase">CPA-10 TopInvest</p>
+                            <p class="text-[9px] text-white/60">Podcast completo no Spotify</p>
+                        </div>
                     </div>
-                </div>
+                    <span class="text-white/20 group-hover:text-white">▶</span>
+                </a>
 
-                <div class="relative pl-6 border-l border-slate-700">
-                    <div class="absolute -left-[5px] top-0 w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_10px_#10b981]"></div>
-                    <h3 class="text-[11px] font-black text-emerald-400 uppercase mb-3">Semana 2: Produtos e Fundos</h3>
-                    <div class="grid gap-2">
-                        <label class="flex items-center space-x-3 text-xs p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
-                            <input type="checkbox" class="task-check w-4 h-4 rounded border-slate-600 bg-slate-700">
-                            <span>Fundos de Investimento (Core)</span>
-                        </label>
-                        <label class="flex items-center space-x-3 text-xs p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
-                            <input type="checkbox" class="task-check w-4 h-4 rounded border-slate-600 bg-slate-700">
-                            <span>Tributação (IR/IOF/Come-cotas)</span>
-                        </label>
+                <a href="https://www.youtube.com/playlist?list=PL_mN57A1BfGv-v8vAAmY-OsqP-I61XjX1" target="_blank" class="bg-red-600/10 border border-red-600/20 p-5 rounded-[1.5rem] flex items-center justify-between group active:scale-95">
+                    <div class="flex items-center space-x-4">
+                        <span class="text-2xl">📺</span>
+                        <div>
+                            <p class="text-xs font-black text-red-500 uppercase">Aulas Edgar Abreu</p>
+                            <p class="text-[9px] text-red-500/60">Curso Completo (Playlist YT)</p>
+                        </div>
                     </div>
-                </div>
+                    <span class="text-red-500/20 group-hover:text-red-500">▶</span>
+                </a>
             </div>
         </section>
 
-        <footer class="glass rounded-3xl p-4 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">🎧</div>
-                <div>
-                    <p class="text-[10px] font-black uppercase text-white">Car Audio Mode</p>
-                    <p class="text-[8px] text-slate-400">Fixação via áudio ligada</p>
-                </div>
+        <section class="glass rounded-[2rem] p-6">
+            <h3 class="text-[10px] font-black uppercase text-slate-500 mb-4">Milestones da Semana</h3>
+            <div id="milestones" class="space-y-2">
+                <label class="flex items-center p-3 rounded-xl hover:bg-white/5 transition cursor-pointer">
+                    <input type="checkbox" class="task-check w-5 h-5 rounded-full border-slate-700 bg-transparent text-blue-600 focus:ring-0">
+                    <span class="ml-3 text-xs font-medium">Módulo 1 e 2 (Sistema e Ética)</span>
+                </label>
+                <label class="flex items-center p-3 rounded-xl hover:bg-white/5 transition cursor-pointer">
+                    <input type="checkbox" class="task-check w-5 h-5 rounded-full border-slate-700 bg-transparent text-blue-600 focus:ring-0">
+                    <span class="ml-3 text-xs font-medium">Módulo 3 (Economia e Finanças)</span>
+                </label>
             </div>
-            <a href="http://googleusercontent.com/spotify.com/2" target="_blank" class="bg-slate-700 px-4 py-2 rounded-full text-[10px] font-bold uppercase hover:bg-blue-600 transition">Abrir Playlist</a>
-        </footer>
+        </section>
 
     </div>
 
@@ -114,27 +88,19 @@
         let totalCount = 0;
 
         const questions = [
-            { cat: "MÓDULO 1", q: "Qual órgão é o 'Pai' do Sistema Financeiro e fixa a meta de inflação?", options: ["BACEN", "CMN", "CVM", "Tesouro"], correct: 1, why: "O CMN (Conselho Monetário Nacional) é o órgão supremo, ele dita as regras e metas." },
-            { cat: "ÉTICA", q: "O investidor comete 'Insider Trading' quando:", options: ["Usa informação privilegiada para lucrar", "Vende ações com prejuízo", "Compra ações de empresas diferentes", "Atrasa o pagamento de tributos"], correct: 0, why: "Insider Trading é o uso de informações não públicas para obter vantagem no mercado." },
-            { cat: "PRODUTOS", q: "Qual o prazo de carência para isenção de IR em uma LCI?", options: ["30 dias", "90 dias", "Não tem, LCI é sempre isenta para PF", "180 dias"], correct: 2, why: "Para Pessoa Física, LCI e LCA são isentas de IR. (Obs: Verifique sempre prazos de liquidez no edital)." },
-            { cat: "FUNDOS", q: "A taxa de performance em um fundo de investimento geralmente é cobrada sobre:", options: ["O patrimônio total", "O valor da taxa de ADM", "O que exceder o benchmark", "O valor aplicado inicial"], correct: 2, why: "Performance é um prêmio pelo gestor ter batido a meta (benchmark)." },
-            { cat: "PLD", q: "A fase de 'Ocultação' na lavagem de dinheiro foca em:", options: ["Colocar o dinheiro no banco", "Dificultar o rastreamento", "Comprar bens de luxo", "Doar para caridade"], correct: 1, why: "Ocultação (ou Layering) serve para quebrar a trilha de evidências." }
+            { cat: "ECONOMIA", q: "Se o IPCA sobe além do esperado, qual a tendência da taxa Selic?", options: ["O Copom tende a elevar a Selic", "A Selic tende a cair", "A Selic permanece inalterada", "O IPCA não influencia a Selic"], correct: 0, why: "Juros altos freiam o consumo e controlam a inflação (IPCA)." },
+            { cat: "INVESTIMENTOS", q: "Qual destes produtos possui garantia do FGC?", options: ["Debêntures", "Ações", "LCI", "Fundos de Ações"], correct: 2, why: "LCI, LCA, CDB e Poupança são cobertos pelo FGC até 250k." },
+            { cat: "LAVAGEM DE DINHEIRO", q: "A fase de 'Integração' consiste em:", options: ["Colocar o dinheiro no sistema", "Dificultar o rastreio", "Trazer o dinheiro de volta com aparência lícita", "Trocar notas por moedas"], correct: 2, why: "Integração é a última fase, onde o dinheiro 'sujo' parece vir de negócios legítimos." },
+            { cat: "ÉTICA", q: "O 'Chinese Wall' serve para:", options: ["Separar a gestão de recursos próprios da de terceiros", "Aumentar a segurança contra hackers", "Impedir a entrada de estrangeiros", "Pagar menos impostos"], correct: 0, why: "É a barreira de informação para evitar conflito de interesses no banco." },
+            { cat: "FUNDOS", q: "O 'Come-Cotas' ocorre nos meses de:", options: ["Janeiro e Julho", "Maio e Novembro", "Dezembro", "Todo final de mês"], correct: 1, why: "Maio e Novembro são os meses da antecipação de IR nos fundos (exceto ações)." }
         ];
 
-        // Countdown Timer
+        // Timer
         setInterval(() => {
             const now = new Date().getTime();
             const d = targetDate - now;
             document.getElementById("countdown").innerHTML = `${Math.floor(d/(1000*60*60*24))}d ${Math.floor((d%(1000*60*60*24))/(1000*60*60))}h ${Math.floor((d%(1000*60*60))/(1000*60))}m`;
         }, 1000);
-
-        // Progress Handler
-        const checks = document.querySelectorAll('.task-check');
-        checks.forEach(c => c.addEventListener('change', () => {
-            const pct = Math.round((document.querySelectorAll('.task-check:checked').length / checks.length) * 100);
-            document.getElementById('progress-bar').style.width = pct + '%';
-            document.getElementById('progress-text').innerText = pct + '%';
-        }));
 
         // Quiz Engine
         function initQuiz() {
@@ -151,23 +117,23 @@
 
             r.options.forEach((o, i) => {
                 const b = document.createElement('button');
-                b.className = "btn-option w-full text-left p-4 rounded-2xl bg-slate-800/50 border border-slate-700 text-xs font-medium text-slate-200 flex justify-between items-center";
-                b.innerHTML = `<span>${o}</span> <span class="opacity-0">→</span>`;
+                b.className = "w-full text-left p-5 rounded-2xl bg-white/5 border border-white/10 text-[11px] font-bold transition-all duration-300 hover:border-blue-500";
+                b.innerText = o;
                 b.onclick = () => {
+                    totalCount++;
                     const allBtns = optDiv.querySelectorAll('button');
                     allBtns.forEach(btn => btn.disabled = true);
-                    totalCount++;
                     
                     if(i === r.correct) {
-                        b.classList.add('border-emerald-500', 'bg-emerald-500/10', 'text-emerald-400');
+                        b.classList.add('bg-blue-600', 'border-blue-500', 'text-white');
                         correctCount++;
                     } else {
-                        b.classList.add('border-red-500', 'bg-red-500/10', 'text-red-400');
-                        allBtns[r.correct].classList.add('border-emerald-500', 'text-emerald-400');
+                        b.classList.add('bg-red-600/40', 'border-red-500', 'text-red-200');
+                        allBtns[r.correct].classList.add('bg-blue-600/40', 'border-blue-400');
                     }
                     
-                    document.getElementById('score-text').innerText = `${correctCount}/${totalCount}`;
-                    expDiv.innerHTML = `<strong>💡 Por que?</strong><br>${r.why}`;
+                    document.getElementById('score-text').innerText = `SCORE: ${correctCount}/${totalCount}`;
+                    expDiv.innerHTML = `<strong>MASTER TIP:</strong> ${r.why}`;
                     expDiv.classList.remove('hidden');
                     nextBtn.classList.remove('hidden');
                 };

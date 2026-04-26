@@ -21,72 +21,69 @@
         <header class="flex justify-between items-center px-2 py-4">
             <div>
                 <h1 class="text-2xl font-900 tracking-tighter text-blue-500 italic">CPA10<span class="text-white">ULTRA</span></h1>
-                <p id="voz-name" class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Sincronizando Voz...</p>
+                <p id="voz-name" class="text-[9px] text-gray-500 font-bold uppercase tracking-widest text-center">Ajustando Voz...</p>
             </div>
             <div class="flex items-center space-x-2 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
-                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span class="text-[10px] font-bold text-gray-400">SUPABASE ON</span>
+                <div id="sync-indicator" class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span class="text-[10px] font-bold text-gray-400">SUPABASE</span>
             </div>
         </header>
 
         <div id="dash" class="view active space-y-4">
-            <div class="glass p-8 rounded-[40px] text-center shadow-2xl">
+            <div class="glass p-8 rounded-[40px] text-center shadow-2xl border-b-2 border-blue-500/50">
                 <p class="text-[10px] text-blue-400 font-black uppercase tracking-[0.2em] mb-4">Meta Maratona 500</p>
                 <div class="text-6xl font-900 mb-4 tracking-tighter" id="progresso-txt">0/0</div>
                 <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                    <div id="progresso-bar" class="bg-blue-500 h-full transition-all duration-1000 shadow-[0_0_15px_rgba(59,130,246,0.5)]" style="width: 0%"></div>
+                    <div id="progresso-bar" class="bg-blue-500 h-full transition-all duration-1000" style="width: 0%"></div>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="glass p-5 rounded-3xl">
-                    <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">Status Prova</p>
-                    <p id="dash-timer-ref" class="text-xl font-bold text-yellow-500">180s / Questão</p>
+                    <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">Simulado</p>
+                    <p class="text-xl font-bold text-yellow-500">180s Real</p>
                 </div>
                 <div class="glass p-5 rounded-3xl text-right">
-                    <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">ID Usuário</p>
+                    <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">Usuário</p>
                     <p class="text-xl font-bold text-white italic">Allisson</p>
                 </div>
             </div>
         </div>
 
         <div id="prova" class="view space-y-4">
-            <div class="flex justify-between items-center">
-                <span class="text-[10px] font-black text-yellow-500 bg-yellow-500/10 px-3 py-1 rounded-full uppercase">Timer Real</span>
+            <div class="flex justify-between items-center px-1">
+                <span class="text-[10px] font-black text-yellow-500 bg-yellow-500/10 px-3 py-1 rounded-full">REAL TIME</span>
                 <div id="timer" class="text-2xl font-black text-yellow-500 font-mono">180s</div>
             </div>
-            <div class="glass p-8 rounded-[32px] min-h-[160px] flex items-center shadow-2xl border-l-4 border-blue-500">
-                <p id="q-txt" class="text-lg font-bold leading-tight">Carregando simulado...</p>
+            <div class="glass p-8 rounded-[32px] min-h-[160px] flex items-center shadow-2xl">
+                <p id="q-txt" class="text-lg font-bold leading-tight"></p>
             </div>
             <div id="opts-container" class="space-y-3"></div>
         </div>
 
-        <div id="maratona" class="view space-y-6">
-            <div class="glass p-12 rounded-[56px] text-center relative shadow-inner">
+        <div id="maratona" class="view space-y-6 text-center">
+            <div class="glass p-12 rounded-[56px] relative shadow-inner">
                 <div id="pulse-ring" class="hidden absolute inset-0 rounded-[56px] border-4 border-blue-500/30 animate-ping"></div>
-                <button onclick="toggleMaratona()" id="btn-maratona" class="btn-press relative z-10 w-28 h-28 bg-blue-600 rounded-full text-4xl shadow-[0_0_40px_rgba(37,99,235,0.4)] flex items-center justify-center mx-auto">
-                    ▶️
-                </button>
-                <h2 class="mt-8 font-black text-2xl">Modo Direção</h2>
-                <p class="text-gray-500 text-xs mt-2 uppercase tracking-widest font-bold">5s de Reflexão entre P/R</p>
+                <button onclick="toggleMaratona()" id="btn-maratona" class="btn-press relative z-10 w-28 h-28 bg-blue-600 rounded-full text-4xl shadow-xl flex items-center justify-center mx-auto">▶️</button>
+                <h2 class="mt-8 font-black text-2xl uppercase tracking-tighter">Modo Direção</h2>
+                <p class="text-gray-500 text-[10px] mt-2 font-bold uppercase tracking-widest">Pausa de 5s para refletir</p>
             </div>
-            <div class="bg-blue-500/5 p-6 rounded-3xl border border-blue-500/10">
-                <p id="current-q" class="text-center text-sm text-blue-300 font-medium leading-relaxed italic"></p>
+            <div class="bg-blue-900/10 p-6 rounded-3xl border border-blue-500/10 min-h-[100px] flex items-center justify-center">
+                <p id="current-q" class="text-sm text-blue-300 font-medium leading-relaxed italic"></p>
             </div>
         </div>
     </div>
 
     <nav class="max-w-md mx-auto w-full glass p-4 rounded-[32px] flex justify-around mb-6 shadow-2xl border-t border-white/5">
-        <button onclick="showView('dash')" class="btn-press p-2">📊</button>
-        <button onclick="showView('prova')" class="btn-press p-2">🧪</button>
-        <button onclick="showView('maratona')" class="btn-press p-2">🎧</button>
+        <button onclick="showView('dash')" class="btn-press text-2xl">📊</button>
+        <button onclick="showView('prova')" class="btn-press text-2xl">🧪</button>
+        <button onclick="showView('maratona')" class="btn-press text-2xl">🎧</button>
     </nav>
 
 <script>
-// CONFIGURAÇÃO SUPABASE - CHAVES ALLISSON
 const SB_URL = "https://wfoysxuynbcuxybkqmfz.supabase.co";
 const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indmb3lzeHV5bmJjdXh5YmtxbWZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3OTk3NDcsImV4cCI6MjA4ODM3NTc0N30.v28Tj6z6PrnyUk_kFSvvchjzwHmV7ZXcJH903hQTiZg";
-const supabase = supabase.createClient(SB_URL, SB_KEY);
+const supabase =主supabase.createClient(SB_URL, SB_KEY);
 
 let app = {
     idx: 0,
@@ -96,41 +93,43 @@ let app = {
     userId: 'allisson'
 };
 
-// INICIALIZAR VOZ
 function initVoice() {
     let voices = window.speechSynthesis.getVoices();
     app.voice = voices.find(v => (v.name.includes('Google') || v.name.includes('Microsoft')) && v.lang.includes('pt')) || voices[0];
-    if(app.voice) document.getElementById('voz-name').innerText = app.voice.name;
+    if(app.voice) document.getElementById('voz-name').innerText = "Voz: " + app.voice.name.split(' ')[0];
 }
 window.speechSynthesis.onvoiceschanged = initVoice;
 
-// CARREGAR DADOS CLOUD
 async function init() {
-    // 1. Pegar progresso
     const { data: prog } = await supabase.from('cpa10_progresso').select('maratona_idx').eq('user_id', app.userId).single();
     if(prog) app.idx = prog.maratona_idx;
 
-    // 2. Pegar todas as questões
     const { data: qs } = await supabase.from('cpa10_maratona').select('*').order('id', { ascending: true });
     app.questions = qs || [];
     
     updateUI();
 }
 
-// MARATONA LOGIC
+async function saveProgress() {
+    const indicator = document.getElementById('sync-indicator');
+    indicator.classList.replace('bg-green-500', 'bg-yellow-500');
+    
+    const { error } = await supabase
+        .from('cpa10_progresso')
+        .update({ maratona_idx: app.idx })
+        .eq('user_id', app.userId);
+    
+    if(!error) {
+        setTimeout(() => indicator.classList.replace('bg-yellow-500', 'bg-green-500'), 500);
+    }
+}
+
 async function toggleMaratona() {
     app.playing = !app.playing;
-    const btn = document.getElementById('btn-maratona');
-    const ring = document.getElementById('pulse-ring');
-    
-    btn.innerText = app.playing ? "⏸️" : "▶️";
-    if(app.playing) {
-        ring.classList.remove('hidden');
-        runMaratona();
-    } else {
-        ring.classList.add('hidden');
-        window.speechSynthesis.cancel();
-    }
+    document.getElementById('btn-maratona').innerText = app.playing ? "⏸️" : "▶️";
+    document.getElementById('pulse-ring').classList.toggle('hidden', !app.playing);
+    if(app.playing) runMaratona();
+    else window.speechSynthesis.cancel();
 }
 
 async function runMaratona() {
@@ -140,18 +139,15 @@ async function runMaratona() {
     document.getElementById('current-q').innerText = item.pergunta;
 
     await speak(item.pergunta);
-    
-    // Pausa de 5s para o Allisson pensar na resposta enquanto dirige
     await new Promise(r => setTimeout(r, 5000));
     
     if(!app.playing) return;
     await speak("Resposta: " + item.resposta);
     
     app.idx++;
-    // Sync Cloud
-    await supabase.from('cpa10_progresso').update({ maratona_idx: app.idx }).eq('user_id', app.userId);
-    
     updateUI();
+    saveProgress(); // Chamada isolada do save
+    
     setTimeout(runMaratona, 2000);
 }
 
@@ -178,15 +174,10 @@ function showView(v) {
     if(v === 'prova') startSimulado();
 }
 
-// SIMULADO REALISTA (TIMER 180s)
 function startSimulado() {
-    // Aqui você pode carregar questões de uma tabela 'cpa10_simulado' se criar uma
-    // Por enquanto, usaremos as do banco da maratona para teste
     if(app.questions.length === 0) return;
-    
     let q = app.questions[Math.floor(Math.random() * app.questions.length)];
     document.getElementById('q-txt').innerText = q.pergunta;
-    
     let t = 180;
     clearInterval(window.itv);
     window.itv = setInterval(() => {

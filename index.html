@@ -8,9 +8,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { background: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         .view { display: none; }
-        .active { display: block; }
+        .view.active { display: block; }
         .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
         .btn-press:active { transform: scale(0.95); }
     </style>
@@ -21,10 +21,10 @@
         <header class="flex justify-between items-center px-2 py-4">
             <div>
                 <h1 class="text-2xl font-900 tracking-tighter text-blue-500 italic">CPA10<span class="text-white">ULTRA</span></h1>
-                <p id="voz-name" class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Sincronizando...</p>
+                <p id="voz-name" class="text-[9px] text-gray-500 font-bold uppercase tracking-widest italic">Aguardando Voz...</p>
             </div>
             <div id="sync-indicator" class="flex items-center space-x-2 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
-                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <div id="status-dot" class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                 <span class="text-[10px] font-bold text-gray-400">SUPABASE</span>
             </div>
         </header>
@@ -51,7 +51,7 @@
 
             <div class="glass p-5 rounded-3xl flex justify-between items-center">
                 <span class="text-[10px] text-gray-500 font-bold uppercase">Status de Inscrição</span>
-                <span class="text-[10px] bg-green-500/20 text-green-500 px-2 py-1 rounded-md font-bold uppercase tracking-tight">Pago / Confirmado</span>
+                <span class="text-[10px] bg-green-500/20 text-green-500 px-2 py-1 rounded-md font-bold">PAGO / CONFIRMADO</span>
             </div>
         </div>
 
@@ -61,7 +61,7 @@
                 <div id="timer" class="text-2xl font-black text-yellow-500 font-mono">180s</div>
             </div>
             <div class="glass p-8 rounded-[32px] min-h-[160px] flex items-center shadow-2xl">
-                <p id="q-txt" class="text-lg font-bold leading-tight">Clique na aba para gerar questão.</p>
+                <p id="q-txt" class="text-lg font-bold leading-tight italic text-blue-100">Carregando simulado...</p>
             </div>
             <div id="opts-container" class="space-y-3"></div>
         </div>
@@ -71,89 +71,153 @@
                 <div id="pulse-ring" class="hidden absolute inset-0 rounded-[56px] border-4 border-blue-500/30 animate-ping"></div>
                 <button onclick="toggleMaratona()" id="btn-maratona" class="btn-press relative z-10 w-28 h-28 bg-blue-600 rounded-full text-4xl shadow-xl flex items-center justify-center mx-auto">▶️</button>
                 <h2 class="mt-8 font-black text-2xl uppercase tracking-tighter">Modo Direção</h2>
-                <p class="text-gray-500 text-[10px] mt-2 font-bold uppercase tracking-widest italic">5s de Reflexão</p>
+                <p class="text-gray-500 text-[10px] mt-2 font-bold uppercase tracking-widest italic italic">Ouvir & Refletir</p>
             </div>
-            <div class="bg-blue-900/10 p-6 rounded-3xl border border-blue-500/10 min-h-[100px] flex items-center justify-center">
-                <p id="current-q" class="text-sm text-blue-300 font-medium leading-relaxed italic">Aguardando início...</p>
+            <div class="bg-blue-900/10 p-6 rounded-3xl border border-blue-500/10 min-h-[120px] flex items-center justify-center">
+                <p id="current-q" class="text-sm text-blue-300 font-medium leading-relaxed italic">Clique no Play para iniciar.</p>
             </div>
         </div>
     </div>
 
     <nav class="max-w-md mx-auto w-full glass p-4 rounded-[32px] flex justify-around mb-6 shadow-2xl">
-        <button onclick="showView('dash')" class="btn-press text-2xl">📊</button>
-        <button onclick="showView('prova')" class="btn-press text-2xl">🧪</button>
-        <button onclick="showView('maratona')" class="btn-press text-2xl">🎧</button>
+        <button onclick="showView('dash')" class="btn-press text-2xl filter drop-shadow-lg">📊</button>
+        <button onclick="showView('prova')" class="btn-press text-2xl filter drop-shadow-lg">🧪</button>
+        <button onclick="showView('maratona')" class="btn-press text-2xl filter drop-shadow-lg">🎧</button>
     </nav>
 
 <script>
+// CONFIGURAÇÕES
 const SB_URL = "https://wfoysxuynbcuxybkqmfz.supabase.co";
 const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indmb3lzeHV5bmJjdXh5YmtxbWZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3OTk3NDcsImV4cCI6MjA4ODM3NTc0N30.v28Tj6z6PrnyUk_kFSvvchjzwHmV7ZXcJH903hQTiZg";
-const supabase = window.supabase.createClient(SB_URL, SB_KEY);
+let supabase;
 
-let app = { idx: 0, playing: false, questions: [], voice: null, userId: 'allisson' };
+let app = { 
+    idx: 0, 
+    playing: false, 
+    questions: [], 
+    voice: null, 
+    userId: 'allisson',
+    version: "2.1.0-MAC_FIX"
+};
 
-// INICIALIZAÇÃO
-async function init() {
-    // Busca progresso e questões
-    const [progRes, qsRes] = await Promise.all([
-        supabase.from('cpa10_progresso').select('*').eq('user_id', app.userId).single(),
-        supabase.from('cpa10_maratona').select('*').order('id', { ascending: true })
-    ]);
-
-    if(progRes.data) {
-        app.idx = progRes.data.maratona_idx || 0;
-        if(progRes.data.data_prova) updateCountdown(progRes.data.data_prova);
-    }
-    
-    app.questions = qsRes.data || [];
-    updateUI();
-    initVoice();
-}
-
-// NAVEGAÇÃO ENTRE ABAS
+// 1. FUNÇÃO DE NAVEGAÇÃO (Sem dependências para não travar)
 function showView(viewId) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById(viewId).classList.add('active');
+    console.log("Navegando para:", viewId);
+    const views = ['dash', 'prova', 'maratona'];
+    views.forEach(v => {
+        const el = document.getElementById(v);
+        if(el) el.classList.remove('active');
+    });
     
+    const target = document.getElementById(viewId);
+    if(target) {
+        target.classList.add('active');
+    } else {
+        console.error("View não encontrada:", viewId);
+    }
+
     if(viewId === 'prova') startSimulado();
-    if(viewId !== 'maratona' && app.playing) toggleMaratona(); // Para o áudio se sair da aba
+    if(viewId !== 'maratona' && app.playing) stopMaratona();
 }
 
-// LÓGICA DE ÁUDIO (MARATONA)
-function initVoice() {
-    const voices = window.speechSynthesis.getVoices();
-    app.voice = voices.find(v => v.lang.includes('pt')) || voices[0];
-    if(app.voice) document.getElementById('voz-name').innerText = "Voz: " + app.voice.name.split(' ')[0];
+// 2. INICIALIZAÇÃO BLINDADA
+window.addEventListener('DOMContentLoaded', async () => {
+    console.log("App Versão:", app.version);
+    try {
+        if (typeof window.supabase === 'undefined') {
+            throw new Error("Biblioteca Supabase não encontrada!");
+        }
+        supabase = window.supabase.createClient(SB_URL, SB_KEY);
+        await initData();
+    } catch (e) {
+        console.error("Erro fatal:", e.message);
+        document.getElementById('voz-name').innerText = "ERRO DE CONEXÃO";
+    }
+});
+
+async function initData() {
+    console.log("Buscando dados no Supabase...");
+    
+    try {
+        const [progRes, qsRes] = await Promise.all([
+            supabase.from('cpa10_progresso').select('*').eq('user_id', app.userId).maybeSingle(),
+            supabase.from('cpa10_maratona').select('*').order('id', { ascending: true })
+        ]);
+
+        if(progRes.data) {
+            app.idx = progRes.data.maratona_idx || 0;
+            if(progRes.data.data_prova) updateCountdown(progRes.data.data_prova);
+        }
+
+        app.questions = qsRes.data || [];
+        console.log("Questões carregadas:", app.questions.length);
+        
+        document.getElementById('status-dot').classList.replace('bg-red-500', 'bg-green-500');
+        updateUI();
+        initVoice();
+    } catch (err) {
+        console.error("Erro ao carregar dados:", err);
+    }
 }
-window.speechSynthesis.onvoiceschanged = initVoice;
+
+// 3. LÓGICA DE ÁUDIO
+function initVoice() {
+    const setVoice = () => {
+        const voices = window.speechSynthesis.getVoices();
+        app.voice = voices.find(v => v.lang.includes('pt-BR')) || 
+                    voices.find(v => v.lang.includes('pt')) || 
+                    voices[0];
+        if(app.voice) document.getElementById('voz-name').innerText = "Voz: " + app.voice.name.split(' ')[0];
+    };
+    setVoice();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = setVoice;
+    }
+}
 
 async function toggleMaratona() {
-    if(app.questions.length === 0) return alert("Suba o CSV no Supabase primeiro!");
+    if(app.questions.length === 0) return alert("Banco de questões vazio!");
     
     app.playing = !app.playing;
     document.getElementById('btn-maratona').innerText = app.playing ? "⏸️" : "▶️";
     document.getElementById('pulse-ring').classList.toggle('hidden', !app.playing);
     
-    if(app.playing) runMaratona();
+    if(app.playing) runMaratonaLoop();
     else window.speechSynthesis.cancel();
 }
 
-async function runMaratona() {
-    if(!app.playing || app.idx >= app.questions.length) return;
+function stopMaratona() {
+    app.playing = false;
+    document.getElementById('btn-maratona').innerText = "▶️";
+    document.getElementById('pulse-ring').classList.add('hidden');
+    window.speechSynthesis.cancel();
+}
+
+async function runMaratonaLoop() {
+    if(!app.playing || app.idx >= app.questions.length) {
+        if(app.idx >= app.questions.length) {
+            document.getElementById('current-q').innerText = "Maratona concluída!";
+            stopMaratona();
+        }
+        return;
+    };
 
     let q = app.questions[app.idx];
     document.getElementById('current-q').innerText = q.pergunta;
 
     await speak(q.pergunta);
-    await new Promise(r => setTimeout(r, 5000)); // 5s de reflexão
+    if(!app.playing) return;
+    
+    await new Promise(r => setTimeout(r, 5000)); // Tempo para pensar
     
     if(!app.playing) return;
-    await speak("Resposta: " + q.resposta);
+    await speak("Resposta correta: " + q.resposta);
     
     app.idx++;
     updateUI();
-    saveProgress();
-    setTimeout(runMaratona, 2000);
+    saveProgressToCloud();
+    
+    if(app.playing) setTimeout(runMaratonaLoop, 2000);
 }
 
 function speak(text) {
@@ -161,43 +225,49 @@ function speak(text) {
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(text);
         u.voice = app.voice;
+        u.rate = 0.9;
         u.onend = resolve;
+        u.onerror = resolve;
         window.speechSynthesis.speak(u);
     });
 }
 
-// PERSISTÊNCIA E UI
-async function saveProgress() {
-    const indicator = document.getElementById('sync-indicator').firstElementChild;
-    indicator.classList.replace('bg-green-500', 'bg-yellow-500');
-    
+// 4. UTILITÁRIOS
+async function saveProgressToCloud() {
+    const dot = document.getElementById('status-dot');
+    dot.classList.add('animate-spin');
     await supabase.from('cpa10_progresso').update({ maratona_idx: app.idx }).eq('user_id', app.userId);
-    
-    setTimeout(() => indicator.classList.replace('bg-yellow-500', 'bg-green-500'), 500);
+    dot.classList.remove('animate-spin');
 }
 
 function updateCountdown(dataStr) {
     const prova = new Date(dataStr);
     const hoje = new Date();
     const diff = Math.ceil((prova - hoje) / (1000 * 60 * 60 * 24));
-    document.getElementById('days-countdown').innerText = diff > 0 ? diff + "d" : "HOJE!";
+    document.getElementById('days-countdown').innerText = diff > 0 ? diff + "d" : "HOJE";
     document.getElementById('data-prova-txt').innerText = prova.toLocaleDateString('pt-BR');
 }
 
 function updateUI() {
     const total = app.questions.length || 0;
-    const pct = total > 0 ? (app.idx / total) * 100 : 0;
+    const atual = total > 0 ? app.idx : 0;
+    const pct = total > 0 ? (atual / total) * 100 : 0;
+    
     document.getElementById('progresso-bar').style.width = pct + "%";
-    document.getElementById('progresso-txt').innerText = `${app.idx}/${total}`;
+    document.getElementById('progresso-txt').innerText = `${atual}/${total}`;
 }
 
 function startSimulado() {
     if(app.questions.length === 0) return;
-    const q = app.questions[Math.floor(Math.random() * app.questions.length)];
+    const rand = Math.floor(Math.random() * app.questions.length);
+    const q = app.questions[rand];
     document.getElementById('q-txt').innerText = q.pergunta;
 }
-
-init();
 </script>
+
+<footer class="text-center pb-2">
+    <p class="text-[8px] text-gray-700 font-mono">v2.1.0-MAC_FIX | Allisson Dantas Silva</p>
+</footer>
+
 </body>
 </html>
